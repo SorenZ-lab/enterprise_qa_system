@@ -1,0 +1,26 @@
+# ===== 环境变量（含真实密钥，绝不提交）=====
+.env
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# ===== 日志 =====
+logs/
+*.log
+
+# ===== 模型权重（体积大，用 README 说明如何下载）=====
+rag_qa/models/
+models/
+
+# ===== IDE / 编辑器 =====
+.vscode/
+.idea/
+*.swp
+
+# ===== 运行时数据（按需取消注释）=====
+# rag_qa/data/
+# rag_qa/classify_data/

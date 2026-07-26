@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  enterprise-qa-app:
+#    build: .
+    image: enterprise-qa:v1.0
+    container_name: enterprise-qa-container
+    ports:
+      - "${APP_PORT:-18080}:18080"
+    environment:
+      # 应用配置
+      - HOST=${HOST:-0.0.0.0}
+      - PORT=${PORT:-18080}
+      - PROJECT_ROOT=${PROJECT_ROOT:-/app}
+
+      # MySQL 配置
+      - MYSQL_HOST=${MYSQL_HOST:-mysql}
+      - MYSQL_PORT=${MYSQL_PORT:-3306}
+      - MYSQL_USER=${MYSQL_USER:-root}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-your_mysql_password}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-enterprise_kg}
+
+      # Redis 配置
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-16379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-your_redis_password}
+      - REDIS_DB=${REDIS_DB:-0}
+
+      # Milvus 配置
+      - MILVUS_HOST=${MILVUS_HOST:-milvus}
+      - MILVUS_PORT=${MILVUS_PORT:-19530}
+      - MILVUS_DATABASE_NAME=${MILVUS_DATABASE_NAME:-enterprise}
+      - MILVUS_COLLECTION_NAME=${MILVUS_COLLECTION_NAME:-enterprise_rag}
+
+      # LLM 配置
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-sk-请填写你的DashScope密钥}
+      - LLM_MODEL=${LLM_MODEL:-qwen-plus}
+      - DASHSCOPE_BASE_URL=${DASHSCOPE_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+
+      # 检索参数配置
+      - PARENT_CHUNK_SIZE=${PARENT_CHUNK_SIZE:-1200}
+      - CHILD_CHUNK_SIZE=${CHILD_CHUNK_SIZE:-300}
+      - CHUNK_OVERLAP=${CHUNK_OVERLAP:-50}
+      - RETRIEVAL_K=${RETRIEVAL_K:-3}
+      - CANDIDATE_M=${CANDIDATE_M:-2}
+
+      # 应用配置
+      - VALID_SOURCES=${VALID_SOURCES:-["product", "tech", "hr", "admin"]}
+      - CUSTOMER_SERVICE_PHONE=${CUSTOMER_SERVICE_PHONE:-企业客服}
+
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
