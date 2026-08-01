@@ -52,15 +52,14 @@ enterprise_qa_system/
 │   └── main.py            #   FAQ 独立入口
 ├── rag_qa/                # 第二级 RAG
 │   ├── core/              #   RAG 核心 + BERT 查询分类
-│   ├── edu_document_loaders/  # 8 种文档加载器（PDF/Word/PPT/图片走 OCR）
-│   ├── edu_text_spliter/  #   父子块切分
+│   ├── enterprise_document_loaders/  # 8 种文档加载器（PDF/Word/PPT/图片走 OCR）
+│   ├── enterprise_text_spliter/  #   父子块切分
 │   ├── rag_assessment/    #   RAGAS 评测
 │   ├── models/            #   模型权重（BGE-M3 / BGE-Reranker / BERT，需自行下载）
 │   └── data/              #   知识库数据
 ├── static/                # 前端单页（聊天界面）
 ├── app.py                 # FastAPI 入口
-├── new_main.py            # 集成系统入口（流式）
-├── old_main.py            # 集成系统入口（旧版）
+├── main.py                # 集成系统入口（FAQ + RAG）
 ├── config.ini             # 配置文件（示例值，真实密钥放 .env）
 ├── docker-compose.yml     # 容器编排（示例）
 ├── .env.example           # 环境变量模板（复制为 .env 后填真实值）

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-文件名: old_main.py
+文件名: main.py
 作者: Zhi FANG
 项目: 企业知识库问答
 
@@ -68,7 +68,7 @@ class IntegratedQASystem:
 
     def query(self, query, source_filter=None):
         """
-        根据用户的输入问题和学科过滤，调用fqa返回结果，根据结果判断是否要进入rag部分，rag返回结果。
+        根据用户的输入问题和知识分类过滤，调用 FAQ 返回结果，根据结果判断是否要进入 RAG 部分，RAG 返回结果。
         :param query:
         :param source_filter:
         :return:
@@ -92,7 +92,7 @@ class IntegratedQASystem:
         elif need_rag:
             # 如果需要 RAG，记录回退信息到日志
             self.logger.info("无可靠 MySQL 答案，回退到 RAG")
-            # 调用 RAG 系统生成答案，支持学科过滤
+            # 调用 RAG 系统生成答案，支持知识分类过滤
             answer = self.rag_system.generate_answer(query, source_filter=source_filter)
             # 记录 RAG 答案到日志
             self.logger.info(f"RAG 答案: {answer}")
@@ -119,7 +119,7 @@ def main():
     try:
         # 打印欢迎信息
         print("\n欢迎使用集成问答系统！")
-        # 打印支持的学科类别
+        # 打印支持的知识分类
         print(f"支持的来源: {qa_system.config.VALID_SOURCES}")
         # 提示用户输入查询或退出
         print("输入查询进行问答，输入 'exit' 退出。")
@@ -133,10 +133,10 @@ def main():
                 print("再见！")
                 # 退出循环
                 break
-            # 获取用户输入的学科过滤
+            # 获取用户输入的知识分类过滤
             source_filter = input(f"输入来源过滤 ({'/'.join(qa_system.config.VALID_SOURCES)}) (按 Enter 跳过): ").strip()
             if source_filter and source_filter not in qa_system.config.VALID_SOURCES:
-                # 如果学科过滤无效，记录警告日志
+                # 如果知识分类过滤无效，记录警告日志
                 logger.warning(f"无效来源 '{source_filter}'，忽略过滤")
                 # 打印无效信息，忽略过滤
                 print(f"无效来源 '{source_filter}'，继续无过滤。")

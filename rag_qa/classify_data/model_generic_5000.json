@@ -2,7 +2,7 @@
 {"query": "Python如何读取CSV文件？", "label": "通用知识"}
 {"query": "解释一下什么是RESTful API。", "label": "通用知识"}
 {"query": "数据库三大范式是什么？", "label": "通用知识"}
-{"query": "写一个SQL查询，找出'students'表中所有姓'张'的学生。", "label": "通用知识"}
+{"query": "写一个SQL查询，找出'employees'表中所有姓'张'的员工。", "label": "通用知识"}
 {"query": "5的阶乘是多少？", "label": "通用知识"}
 {"query": "什么是Docker？它和虚拟机的区别？", "label": "通用知识"}
 {"query": "用Java写一个冒泡排序算法。", "label": "通用知识"}

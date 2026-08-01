@@ -31,7 +31,7 @@ import time
 # 导入正则表达式模块，用于匹配日常问候
 import re
 # 导入优化后的问答系统
-from old_main import IntegratedQASystem
+from main import IntegratedQASystem
 
 # 创建 FastAPI 应用实例，设置标题和描述
 app = FastAPI(title="企业智能问答系统API", description="集成MySQL和RAG的企业级智能问答系统")
@@ -172,7 +172,7 @@ async def websocket_endpoint(websocket: WebSocket):
                         "processing_time": time.time() - start_time
                     })
                 break
-            # 调用问答系统，同步返回完整答案（old_main 非流式）
+            # 调用问答系统，同步返回完整答案
             answer = qa_system.query(query, source_filter=source_filter)
             if websocket.client_state == websocket.client_state.CONNECTED:
                 await websocket.send_json({

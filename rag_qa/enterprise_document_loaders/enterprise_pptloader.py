@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 文件名: enterprise_pptloader.py
-作者: ZZS
-项目: 3_代码
+作者: Zhi FANG
+项目: 企业知识库问答
 创建日期: 2026/7/15
 描述: 
 """

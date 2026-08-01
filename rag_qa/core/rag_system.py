@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 文件名: rag_system.py
-作者: ZZS
-项目: 3_代码
+作者: Zhi FANG
+项目: 企业知识库问答
 创建日期: 2026/7/16
 描述: 
 """
@@ -142,12 +142,12 @@ class RAGSystem:
         """
         根据用户问题给出回答
         :param query: 用户的问题
-        :param source_filter: 需要过滤的学科，比如输入ai，那ai相关的文本就不能给大模型做参考。
+        :param source_filter: 需要过滤的知识分类，比如输入 product，那 product 相关的文本就不能给大模型做参考。
         :return:
         """
         #   记录查询开始时间
         start_time = time.time()
-        logger.info(f"开始处理查询: '{query}', 学科过滤: {source_filter}")
+        logger.info(f"开始处理查询: '{query}', 知识分类过滤: {source_filter}")
 
         #   判断查询类型
         # todo 1. 意图分类，将用户的query 用微调好的bert进行分类，要么企业咨询要么是通用知识。
