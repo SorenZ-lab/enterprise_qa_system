@@ -4,7 +4,6 @@
 文件名: prompts.py
 作者: Zhi FANG
 项目: 企业知识库问答
-创建日期: 2026/7/16
 描述: 
 """
 # 导入 PromptTemplate 类，用于创建 Prompt 模板

@@ -4,7 +4,6 @@
 文件名: enterprise_chinese_recursive_text_splitter.py
 作者: Zhi FANG
 项目: 企业知识库问答
-创建日期: 2026/7/15
 描述: 
 """
 import re
