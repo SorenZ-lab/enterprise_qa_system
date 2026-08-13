@@ -6,6 +6,11 @@
 项目: 企业知识库问答
 描述: 
 """
+import os
+import sys
+# 将项目根目录加入 sys.path，保证 `from base.config import Config` 可导入
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 # 导入 MySQL 连接库
 import pymysql
 # 导入pandas
@@ -117,9 +122,15 @@ class MySQLClient:
 
 
 if __name__ == '__main__':
+    # FAQ 数据导入脚本：建表 + 导入 data/企业知识问答.csv（重复执行会先清空旧数据）
     mysql_client = MySQLClient()
-    # todo 不要多次执行，会插入重复的数据。
-    # 在插入数据之前，先执行 drop 表，创建表，然后在插入数据
-    # mysql_client.create_table()
-    # 上边两层 + / data/企业知识问答.csv
-    # mysql_client.insert_data('../data/企业知识问答.csv')
+    mysql_client.create_table()
+    # 清空旧数据，避免重复导入
+    mysql_client.cursor.execute("DELETE FROM faq")
+    mysql_client.connection.commit()
+    # CSV 位于项目根目录 data/企业知识问答.csv
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    csv_path = os.path.join(project_root, 'data', '企业知识问答.csv')
+    mysql_client.insert_data(csv_path)
+    print("FAQ 数据导入完成")
+    mysql_client.close()

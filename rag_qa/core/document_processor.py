@@ -93,16 +93,6 @@ def load_documents_from_directory(directory_path):
                     for doc in loaded_docs:
                         print(type( doc))
                         # print("文档读取内容：",doc)
-                        # 格式：<class 'langchain_core.documents.base.Document'>
-                        # page_content='LLM背景知识介绍
-                        # 学习⽬标
-                        # 了解LLM背景的知识
-                        # 掌握什么是语⾔模型
-                        # ，，，，，
-                        # P(wW...WNPP(S)
-                        # ∑log(P(ui))
-                        # '
-                        # metadata={'source': 'rag_qa/data/ai_data\\LLM基础知识.pdf'}
 
                         # 为文档添加知识分类元数据
                         doc.metadata["source"] = source
@@ -111,16 +101,6 @@ def load_documents_from_directory(directory_path):
                         # 为文档添加当前时间戳元数据  isoformat() 函数将时间戳转换为 ISO 格式字符串 YYYY-MM-DD HH:MM:SS.mmmmmm
                         doc.metadata["timestamp"] = datetime.now().isoformat()
 
-                        # print("文档处理之后加上元数据内容：", doc)
-                        # page_content='LLM背景知识介绍
-                        # 学习⽬标
-                        # ∑log(P(ui))
-                        # '
-                        # metadata={
-                        #   'source': 'ai',
-                        #   'file_path': 'rag_qa/data/ai_data\\产品介绍.docx',
-                        #   'timestamp': '2026-07-15T14:30:15.564885'
-                        #   }
                     # 将加载的文档添加到总列表中
                     documents.extend(loaded_docs)
                     # 记录成功加载文件的日志
@@ -178,25 +158,6 @@ def process_documents(directory_path,
         print("父块内容：",parent_docs)
         print("父块数量：",len(parent_docs))
 
-        #  [
-        #  Document(
-        #       metadata={
-        #           'source': 'ai',
-        #           'file_path': 'rag_qa/data/ai_data\\LLM基础知识.pdf',
-        #           'timestamp': '2026-07-15T15:16:24.406352'
-        #           },
-        #       page_content='LLM背景知识介绍\n \n学习⾔模型型代表是BA参数规模步⼊千万'
-        #      ),
-        #   Document(
-        #      metadata={
-        #           'source': 'ai',
-        #           'file_path': 'rag_qa/data/ai_data\\LLM基础知识.pdf',
-        #           'timestamp': '2026-07-15T15:16:24.406352'
-        #           },
-        #     page_content='Evolutionary\nGLM\nO够计算出'
-        #     ),
-        #      ，，，，
-        #   ]
 
         # 遍历每个父块，带上索引 j
         for j, parent_doc in enumerate(parent_docs):
@@ -211,21 +172,6 @@ def process_documents(directory_path,
             sub_chunks = child_splitter_to_use.split_documents([parent_doc])
             print("子块内容：",sub_chunks)
             print("子块数量：",len(sub_chunks))
-            # 子块内容：
-            # [
-            #      Document(
-            #         metadata={
-            #             'source': 'ai',
-            #             'file_path': 'rag_qa/data/ai_data\\LLM基础知识.pdf',
-            #             'timestamp': '2026-07-15T15:25:13.624969',
-            #             'parent_id': 'doc_0_parent_0',
-            #             'parent_content': 'LLM背景知识介绍\n \n语⾔任nt）时代，模型参数规模步⼊千万'
-            #             },
-            #         page_content='LLM背景知识介绍\n \⽌23年，语⾔模型发展⾛过了三个阶段：'
-            #         ),
-            #        Document(,,,,)
-            # ]
-            # 子块数量:2
 
 
             # 遍历每个子块，带上索引 k
@@ -239,16 +185,6 @@ def process_documents(directory_path,
                 # 将子块添加到子块列表中
                 child_chunks.append(sub_chunk)
                 print("处理后的子块内容：",sub_chunk)
-                # page_content='LLM背景知识介绍学习⽬标,了解LLM背景的知识,,,⾔模型发展⾛过了三个阶段：'
-                # metadata={
-                # 	'source': 'ai',
-                # 	'file_path': 'rag_qa/data/ai_data\\LLM基础知识.pdf',
-                # 	'timestamp': '2026-07-15T15:32:55.158096',
-                # 	'parent_id': 'doc_0_parent_0',
-                # 	'parent_content': 'LLM背景知识介绍\n \n学习⽬标\n \n了解,,,,,和训练语料规模，探索不同类型的参数规模步⼊千万',
-                # 	'id': 'doc_0_parent_0_child_0'
-                # }
-                # id: 第几个文档，父块第几个，子块第几个。
 
 
                 # break
@@ -266,7 +202,7 @@ def process_documents(directory_path,
 if __name__ == '__main__':
 
     chunks = process_documents(
-        r'rag_qa/data/ai_data',
+        r'rag_qa/data/tech_data',
         conf.PARENT_CHUNK_SIZE,
         conf.CHILD_CHUNK_SIZE,
         conf.CHUNK_OVERLAP,  # 5% ~ 20%，和token有关

@@ -293,10 +293,16 @@ class VectorStore:
         )
 
 if __name__ == '__main__':
+    # 构建向量库：遍历 data 目录下所有知识分类子目录，逐类导入文档到 Milvus
     vs = VectorStore()
     from rag_qa.core.document_processor import process_documents
-    docs = process_documents(
-        r"rag_qa/data/ai_data",
-    )
-    print("已经加载好子块：",len(docs))
-    vs.add_documents(docs)
+    total = 0
+    for category in sorted(os.listdir(config.DATA_DIR)):
+        category_path = os.path.join(config.DATA_DIR, category)
+        if not os.path.isdir(category_path):
+            continue
+        docs = process_documents(category_path)
+        print(f"知识分类 [{category}] 已加载子块：{len(docs)}")
+        vs.add_documents(docs)
+        total += len(docs)
+    print(f"向量库构建完成，共导入 {total} 个子块")

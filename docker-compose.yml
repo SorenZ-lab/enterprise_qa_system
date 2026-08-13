@@ -1,53 +1,122 @@
-version: '3.8'
+# docker-compose.yml — 企业知识库问答系统 本地依赖服务编排
+# 启动：docker compose up -d
+version: "3.9"
 
 services:
-  enterprise-qa-app:
-#    build: .
-    image: enterprise-qa:v1.0
-    container_name: enterprise-qa-container
-    ports:
-      - "${APP_PORT:-18080}:18080"
-    environment:
-      # 应用配置
-      - HOST=${HOST:-0.0.0.0}
-      - PORT=${PORT:-18080}
-      - PROJECT_ROOT=${PROJECT_ROOT:-/app}
 
-      # MySQL 配置
-      - MYSQL_HOST=${MYSQL_HOST:-mysql}
-      - MYSQL_PORT=${MYSQL_PORT:-3306}
-      - MYSQL_USER=${MYSQL_USER:-root}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-your_mysql_password}
-      - MYSQL_DATABASE=${MYSQL_DATABASE:-enterprise_kg}
-
-      # Redis 配置
-      - REDIS_HOST=${REDIS_HOST:-redis}
-      - REDIS_PORT=${REDIS_PORT:-16379}
-      - REDIS_PASSWORD=${REDIS_PASSWORD:-your_redis_password}
-      - REDIS_DB=${REDIS_DB:-0}
-
-      # Milvus 配置
-      - MILVUS_HOST=${MILVUS_HOST:-milvus}
-      - MILVUS_PORT=${MILVUS_PORT:-19530}
-      - MILVUS_DATABASE_NAME=${MILVUS_DATABASE_NAME:-enterprise}
-      - MILVUS_COLLECTION_NAME=${MILVUS_COLLECTION_NAME:-enterprise_rag}
-
-      # LLM 配置
-      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-sk-请填写你的DashScope密钥}
-      - LLM_MODEL=${LLM_MODEL:-qwen-plus}
-      - DASHSCOPE_BASE_URL=${DASHSCOPE_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
-
-      # 检索参数配置
-      - PARENT_CHUNK_SIZE=${PARENT_CHUNK_SIZE:-1200}
-      - CHILD_CHUNK_SIZE=${CHILD_CHUNK_SIZE:-300}
-      - CHUNK_OVERLAP=${CHUNK_OVERLAP:-50}
-      - RETRIEVAL_K=${RETRIEVAL_K:-3}
-      - CANDIDATE_M=${CANDIDATE_M:-2}
-
-      # 应用配置
-      - VALID_SOURCES=${VALID_SOURCES:-["product", "tech", "hr", "admin"]}
-      - CUSTOMER_SERVICE_PHONE=${CUSTOMER_SERVICE_PHONE:-企业客服}
-
-    volumes:
-      - ./logs:/app/logs
+  # ── MySQL 主数据库（FAQ 存储）──
+  mysql:
+    image: mysql:8.0
+    container_name: enterprise_mysql
     restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-your_mysql_password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-enterprise_kg}
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_PASSWORD:-your_mysql_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis 缓存（对外 16379，本机 6379 已占用）──
+  redis:
+    image: redis:7-alpine
+    container_name: enterprise_redis
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:-your_redis_password}"]
+    ports:
+      - "16379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-your_redis_password}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── etcd（Milvus 元数据存储，仅内部使用）──
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.14
+    container_name: enterprise_etcd
+    restart: unless-stopped
+    environment:
+      ETCD_AUTO_COMPACTION_MODE: revision
+      ETCD_AUTO_COMPACTION_RETENTION: "1000"
+      ETCD_QUOTA_BACKEND_BYTES: "4294967296"
+    command: >
+      etcd
+      --advertise-client-urls=http://127.0.0.1:2379
+      --listen-client-urls=http://0.0.0.0:2379
+      --data-dir=/etcd
+    volumes:
+      - etcd_data:/etcd
+
+  # ── MinIO（Milvus 向量文件存储，仅内部使用）──
+  minio:
+    image: minio/minio:latest
+    container_name: enterprise_minio
+    restart: unless-stopped
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ── Milvus 向量数据库（对外 19530）──
+  milvus:
+    image: milvusdb/milvus:v2.4.0
+    container_name: enterprise_milvus
+    restart: unless-stopped
+    command: ["milvus", "run", "standalone"]
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+      MINIO_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+    volumes:
+      - milvus_data:/var/lib/milvus
+    ports:
+      - "19530:19530"
+    depends_on:
+      etcd:
+        condition: service_started
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  # ── Attu（Milvus 可视化管理界面，可选）──
+  attu:
+    image: zilliz/attu:v2.4.12
+    container_name: enterprise_attu
+    restart: unless-stopped
+    environment:
+      MILVUS_URL: milvus:19530
+      SERVER_PORT: "3000"
+      TZ: Asia/Shanghai
+    ports:
+      - "30000:3000"
+    depends_on:
+      milvus:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
+  redis_data:
+  etcd_data:
+  minio_data:
+  milvus_data:

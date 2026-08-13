@@ -82,5 +82,4 @@ def main():
 
 if __name__ == "__main__":
     # 运行主程序
-    # 我学习了rag，然后在学习agent有什么优势。
     main()

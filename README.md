@@ -103,10 +103,27 @@ cp .env.example .env
 | BGE-Reranker-Large | 精排重排 | `BAAI/bge-reranker-large` |
 | bert-base-chinese | 查询分类 | `google-bert/bert-base-chinese` |
 
-### 5. 准备数据并启动
+### 5. 准备 FAQ 数据（导入 MySQL）
 
 ```bash
-# 准备 FAQ CSV 与知识库文档，然后启动服务
+python mysql_qa/db/mysql_client.py   # 建表 + 导入 data/企业知识问答.csv
+```
+
+> 重复执行会自动清空旧数据再导入，不会产生重复记录。
+
+### 6. 构建向量库（导入文档到 Milvus）
+
+```bash
+# 首次运行需先在 Milvus 中创建数据库 enterprise（可用 Attu 界面 http://localhost:30000 创建，或执行）：
+python -c "from pymilvus import connections, utility; connections.connect(host='localhost', port='19530'); utility.create_database('enterprise')"
+
+# 遍历 rag_qa/data/ 下各知识分类，完成「解析 → 父子块切分 → BGE-M3 向量化 → 写入 Milvus」
+python rag_qa/core/vector_store.py
+```
+
+### 7. 启动服务
+
+```bash
 python app.py
 # 浏览器访问 http://localhost:18080
 ```

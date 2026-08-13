@@ -1,0 +1,52 @@
+# ===== Web 框架 =====
+fastapi
+uvicorn[standard]
+pydantic
+
+# ===== 大模型（DashScope OpenAI 兼容接口）=====
+openai
+
+# ===== 数据存储 =====
+pymysql
+redis
+pymilvus[model]          # 含 milvus_model（BGEM3EmbeddingFunction 依赖）
+
+# ===== 深度学习 / 向量模型 =====
+# 注意：torch 默认装 CPU 版；如需 GPU 请按官方指引安装对应 CUDA 版本
+torch
+transformers
+sentence-transformers
+
+# ===== 检索 =====
+jieba
+rank-bm25
+numpy
+pandas
+scikit-learn
+
+# ===== LangChain 生态 =====
+langchain-core
+langchain-community
+langchain-text-splitters
+langchain-openai
+langchain-ollama
+
+# ===== 评测（RAGAS 五指标）=====
+ragas
+datasets
+
+# ===== 模型下载（备用）=====
+modelscope
+
+# ===== 文档解析 =====
+python-docx
+python-pptx
+PyMuPDF                 # import 名为 fitz
+Pillow
+opencv-python-headless  # import 名为 cv2
+rapidocr-paddle          # OCR 主路径（GPU）
+rapidocr-onnxruntime     # OCR 兜底（CPU）
+unstructured             # Markdown 解析（UnstructuredMarkdownLoader 依赖）
+
+# ===== 工具 =====
+tqdm
