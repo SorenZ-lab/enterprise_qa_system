@@ -8,7 +8,6 @@
 """
 # enterprise_document_loaders/enterprise_imgloader.py 源码
 from typing import Iterator
-# todo 使用从根目录开始的路径导入。
 from rag_qa.enterprise_document_loaders.enterprise_ocr import get_ocr
 from langchain_core.documents import Document
 from langchain_core.document_loaders import BaseLoader

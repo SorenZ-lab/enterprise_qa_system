@@ -15,7 +15,6 @@ def preprocess_text(text):
     # 预处理文本
     logger.info("开始预处理文本")
     try:
-        # todo 以下是测试代码
         # print(jieba.lcut(text))
         # print(type(jieba.lcut(text)))
         # ['我', '是', '精通', 'dify', '，', '大', '模型', '的', 'yes', '工程师', '！']
@@ -30,7 +29,6 @@ def preprocess_text(text):
         # ['我', '是', '精通', 'dify', '，', '大', '模型', '的', 'yes', '工程', '工程师', '！']
         # <class 'list'>
         # print("*"*100)
-        # todo 以上是测试代码
         # 分词并转换为小写
         # 为啥转转小写，将大小写统一
         return jieba.lcut(text.lower())

@@ -12,7 +12,6 @@ import pandas as pd
 # 导入ragas库的evaluate函数，用于执行RAG评估
 from ragas import evaluate
 # 导入ragas的评估指标，包括忠实度、答案相关性、上下文相关性和上下文召回率
-# todo 1:
 #  1 如果你不想看 context_relevancy，换成 context_precision
 #  2 如果你想看 context_relevancy，可以将ragas版本，从现在0.2.6 升级到 0.3.0
 #  3 升级指令：切换到当前的环境下，然后执行 pip install ragas==0.3.0
@@ -54,7 +53,6 @@ eval_data = {
 dataset = Dataset.from_dict(eval_data)
 
 # 3. 配置RAGAS评估环境
-# todo 2 初始化大模型和嵌入模型，使用本地embedding bme_m3也可以。milvus包下的嵌入模型报错：没有embed_query这个方法。
 # 初始化ChatOpenAI模型，指定使用gpt-4模型，并设置OpenAI API密钥
 # llm = ChatOpenAI(model="gpt-4", openai_api_key="your_openai_api_key")
 llm = ChatOpenAI(api_key=config.DASHSCOPE_API_KEY,
@@ -72,7 +70,6 @@ embeddings = OllamaEmbeddings(model="mxbai-embed-large", temperature=0)
 
 # 4. 执行评估
 # 调用evaluate函数，传入数据集、评估指标、LLM模型和嵌入模型
-# todo 3 context_relevancy 改成 ContextRelevance，也可以将 context_precision 加进来。
 #  ContextRelevance方法是非实例化的，使用时需要加括号。
 result = evaluate(
     # 传入转换好的Dataset对象
@@ -102,7 +99,6 @@ result_df = pd.DataFrame([result])
 # 将DataFrame保存为CSV文件，文件名为ragas_evaluation_results.csv，不保存索引
 result_df.to_csv("ragas_evaluation_results.csv", index=False)
 
-# todo 4 详细的评估指标
 print("详细评估指标：")
 result = result.to_pandas()
 result.to_excel("ragas_evaluation_results.xlsx", index=False)

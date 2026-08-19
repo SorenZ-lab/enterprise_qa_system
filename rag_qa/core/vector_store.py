@@ -16,11 +16,9 @@ from langchain_core.documents import Document
 from sentence_transformers import CrossEncoder
 # 导入 hashlib 模块，用于生成唯一 ID 的哈希值
 import hashlib
-# todo 更改加载包
 from base.config import config
 from base.logger import logger
 import sys
-# todo 缺失os
 import os
 # 定义 VectorStore 类，封装向量存储和检索功能
 
@@ -30,7 +28,6 @@ sys.path.insert(0, rag_qa_path)
 project_root = os.path.dirname(rag_qa_path)
 sys.path.insert(0, project_root)
 
-# todo 增加 conf = config,或者将代码中所有的conf 全改成config
 conf = config
 
 class VectorStore:
@@ -142,7 +139,6 @@ class VectorStore:
             # 初始化稀疏向量字典
             sparse_vector = {}
             # 获取第 i 行的稀疏向量数据
-            # todo index 改成i
             # row = embeddings['sparse'][[index], :]
             # 稀疏向量 比如 768维，[0.001， 0， 0， 0，  0.006]，太长了，没用信息太多。
             #  非零的索引：[0,4]
@@ -191,7 +187,6 @@ class VectorStore:
         # 初始化查询的稀疏向量字典
         sparse_query_vector = {}
         # 获取查询稀疏向量的第 0 行数据
-        # todo index 改成 0
         # row = query_embeddings["sparse"][[index], :]
         row = query_embeddings["sparse"][[0], :]
         # 获取稀疏向量的非零值索引

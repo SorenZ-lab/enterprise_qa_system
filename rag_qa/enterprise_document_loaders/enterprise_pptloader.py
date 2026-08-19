@@ -7,7 +7,6 @@
 描述: 
 """
 from typing import Iterator
-# todo 添加ocr
 # from enterprise_ocr import get_ocr
 from rag_qa.enterprise_document_loaders.enterprise_ocr import get_ocr
 

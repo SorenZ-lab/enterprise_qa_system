@@ -13,7 +13,6 @@ from langchain_community.document_loaders import TextLoader
 from langchain_community.document_loaders.markdown import UnstructuredMarkdownLoader
 from langchain_text_splitters import MarkdownTextSplitter
 from datetime import datetime
-# todo 1. 可以使用下面的 文件完整目录的导入方式，也可以使用 在目录下加一个init方法，然后导入。
 from rag_qa.enterprise_text_spliter import ChineseRecursiveTextSplitter
 from rag_qa.enterprise_text_spliter.enterprise_chinese_recursive_text_splitter import ChineseRecursiveTextSplitter
 
@@ -22,7 +21,6 @@ from rag_qa.enterprise_document_loaders import OCRPDFLoader, OCRDOCLoader, OCRPP
 from base.config import config
 from base.logger import logger
 
-# todo 2. 因为在配置文件中定义了conf，所以不需要实例化。
 # conf = Config()
 conf = config
 
@@ -124,7 +122,6 @@ def process_documents(directory_path,
                       chunk_overlap=conf.CHUNK_OVERLAP
                       ):
     # 从指定目录加载所有文档
-    # todo 加载文档
     documents = load_documents_from_directory(directory_path)
     # sys.exit(111111)
 

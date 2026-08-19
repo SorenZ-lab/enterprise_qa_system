@@ -6,6 +6,5 @@
 项目: 企业知识库问答
 描述: 
 """
-# todo 在目录下加一个init方法，然后导入。
 from .enterprise_model_text_spliter import *
 from .enterprise_chinese_recursive_text_splitter import *

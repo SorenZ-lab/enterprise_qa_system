@@ -12,7 +12,6 @@ import numpy as np
 from PIL import Image
 from tqdm import tqdm
 from typing import Iterator
-# todo 添加包
 from rag_qa.enterprise_document_loaders.enterprise_ocr import get_ocr
 # from enterprise_ocr import get_ocr
 from langchain_core.documents import Document

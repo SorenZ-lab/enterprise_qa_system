@@ -7,7 +7,6 @@
 描述: 
 """
 
-# todo 更改包
 # from langchain.text_splitter import CharacterTextSplitter
 # from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_text_splitters import CharacterTextSplitter

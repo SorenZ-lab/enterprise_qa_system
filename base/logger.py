@@ -11,11 +11,9 @@ import logging
 # 导入路径操作库
 import os
 # 导入配置类
-# todo
 
 import os.path
 import logging
-# todo  如果导入的是类，需要实例化才能使用 ，比如 conf = Config()
 from base.config import Config
 from base.config import config
 

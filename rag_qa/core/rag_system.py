@@ -14,7 +14,6 @@ from base.logger import logger
 from rag_qa.core.query_classifier import QueryClassifier  # 导入查询分类器
 from rag_qa.core.strategy_selector import StrategySelector  # 导入策略选择器
 
-# todo
 conf = config
 
 
@@ -149,15 +148,15 @@ class RAGSystem:
         logger.info(f"开始处理查询: '{query}', 知识分类过滤: {source_filter}")
 
         #   判断查询类型
-        # todo 1. 意图分类，将用户的query 用微调好的bert进行分类，要么企业咨询要么是通用知识。
+        # 1. 意图分类，将用户的query 用微调好的bert进行分类，要么企业咨询要么是通用知识。
         query_category = self.query_classifier.predict_category(query)
         logger.info(f"查询分类结果：{query_category} (查询: '{query}')")
 
         #   如果查询属于“通用知识”类别，则直接使用 LLM 回答
-        # todo 2. 如果是通用知识，全都给到大模型做输出，给之前需要构建我们提示词模板。
+        # 2. 如果是通用知识，全都给到大模型做输出，给之前需要构建我们提示词模板。
         if query_category == "通用知识":
             logger.info("查询为通用知识，直接调用 LLM")
-            # todo 对齐
+            # 对齐
             prompt_input = self.rag_prompt.format(
                 context="", question=query, history="", phone=config.CUSTOMER_SERVICE_PHONE
             )  #   不使用上下文
@@ -172,15 +171,15 @@ class RAGSystem:
             )
             return answer
 
-        # todo 3. 不是通用知识，企业咨询就继续走下面流程，检索知识库。
+        # 3. 不是通用知识，企业咨询就继续走下面流程，检索知识库。
         logger.info("查询为企业咨询，执行 RAG 流程")
         #   选择检索策略
-        # todo 4. 此方法可以使用大模型+提示词，根据用户的问题给出具体的检索策略，
+        # 4. 此方法可以使用大模型+提示词，根据用户的问题给出具体的检索策略，
         #  四种：直接检索、假设问题检索、子查询检索、回溯问题检索。
         strategy = self.strategy_selector.select_strategy(query)
 
         #   检索相关文档
-        # todo 5. 不论使用那种检索方式，都需要调用【混合检索方法】，返回和问题（改写后的问题）相关RAG文本块。
+        # 5. 不论使用那种检索方式，都需要调用【混合检索方法】，返回和问题（改写后的问题）相关RAG文本块。
         context_docs = self.retrieve_and_merge(
             query, source_filter=source_filter, strategy=strategy
         )  #   传递 strategy

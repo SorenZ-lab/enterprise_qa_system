@@ -13,7 +13,6 @@ import os
 import torch
 # 导入日志
 import sys
-# todo 导入日志
 from base.logger import logger
 # 导入numpy
 import numpy as np
@@ -30,12 +29,10 @@ project_root = os.path.abspath(os.path.dirname(os.path.abspath(rag_qa_path)))
 sys.path.insert(0, project_root)
 
 class QueryClassifier:
-    # todo 更改了模型位置
     # def __init__(self, model_path='models/bert_query_classifier'):
     def __init__(self, model_path='models\\bert_query_classifier'):
 
         # 加载bert
-        # todo 预训练模型路径
         self.pre_trained_model_path = f'{rag_qa_path}\\models\\bert-base-chinese'
         # 模型训练以后保存的位置
         self.model_path = model_path
@@ -71,7 +68,6 @@ class QueryClassifier:
             logger.info(f"加载模型: {self.model_path}")
         else:
             # 初始化新模型
-            # todo 把模型位置设置好。
             self.model = BertForSequenceClassification.from_pretrained(self.pre_trained_model_path, num_labels=2)
             # 将模型移到指定设备
             self.model.to(self.device)

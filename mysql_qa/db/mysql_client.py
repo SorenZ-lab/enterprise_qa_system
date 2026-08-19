@@ -32,6 +32,7 @@ class MySQLClient:
             # 传参，host，端口，用户名，密码，数据库名称
             self.connection = pymysql.connect(
                 host=Config().MYSQL_HOST,
+                port=Config().MYSQL_PORT,
                 user=Config().MYSQL_USER,
                 password=Config().MYSQL_PASSWORD,
                 database=Config().MYSQL_DATABASE

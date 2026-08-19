@@ -8,7 +8,7 @@
 """
 import re
 from typing import List, Optional, Any
-# todo 低版本使用的是 langchain.text_splitter，新版本 langchain_text_splitters
+# 低版本使用 langchain.text_splitter，新版本使用 langchain_text_splitters
 # from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import logging

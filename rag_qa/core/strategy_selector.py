@@ -10,7 +10,6 @@
 # 导入 LangChain 提示模板
 from langchain_core.prompts import PromptTemplate
 # 导入日志和配置
-# todo 导入基础配置
 from base.config import config
 from base.logger import logger
 # 导入 OpenAI
@@ -32,7 +31,6 @@ class StrategySelector:
         try:
             # 创建聊天完成请求
             completion = self.client.chat.completions.create(
-                # todo 更改config名称
                 # model=Config().LLM_MODEL,
                 model = config.LLM_MODEL,
                 messages=[
